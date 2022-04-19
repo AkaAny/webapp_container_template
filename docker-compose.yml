@@ -1,0 +1,15 @@
+version: "3"
+services:
+  tomcat:
+    image: tomcat
+    ports:
+      - "8080:8080"
+      - "35005:35005"
+    volumes:
+      - ./webapps:/usr/local/tomcat/webapps:rw
+    # - ./conf/server.xml:/usr/local/tomcat/conf/server.xml:ro
+    environment:
+      TZ: Asia/Shanghai
+      JPDA_ADDRESS: 35005
+      JPDA_TRANSPORT: dt_socket
+    command: ["catalina.sh", "jpda", "run"]

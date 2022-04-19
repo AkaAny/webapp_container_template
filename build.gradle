@@ -1,0 +1,46 @@
+plugins {
+    id 'war'
+    id 'java'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    mavenCentral()
+}
+
+dependencies {
+    providedCompile 'javax:javaee-api:8.0.1'
+
+    testImplementation 'junit:junit:4.11'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+task afterWarDeploy{
+    println "project name:"+project.name
+    println "version:"+version.toString()
+    FileTree tree = fileTree("webapps")
+    tree.visit{
+        element ->
+            if(true){
+                println "$element.file.name"+" "+element.getName()
+                delete element.file
+            }
+    }
+    copy{
+        from 'build/libs'
+        into 'webapps'
+        rename {
+            project.name+".war"
+        }
+    }
+}
+
+war.finalizedBy(afterWarDeploy)
